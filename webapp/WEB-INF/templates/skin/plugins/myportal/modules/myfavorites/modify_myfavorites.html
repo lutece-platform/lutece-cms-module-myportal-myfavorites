@@ -1,0 +1,31 @@
+<#include "myfavorites_tabs.html" />
+<@tabs2 tab="myfavorites" />
+
+<@row>
+	<@columns>
+		<@tform class='form-horizontal' action='jsp/site/Portal.jsp?page=myfavorites'>
+			<fieldset>
+				<legend>#i18n{module.myportal.myfavorites.modify_myfavorites.title{i18n_close}</legend>
+				<@messages errors=errors />
+				<input type="hidden" id="id" name="id" value="${myfavorites.id}"/>
+				
+				<@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelUrl}' mandatory=true>
+          <@input type='text' id='url' name='url'  maxlength='255' value='${myfavorites.url}' tabIndex='0' />
+				</@formGroup>
+				<@formGroup labelFor='id_icon' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelIdIcon}' mandatory=true>
+          <@input type='text' id='id_icon' name='id_icon'  value='${myfavorites.idIcon}' tabIndex='1' />
+				</@formGroup>
+				<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelLabel}' mandatory=true>
+          <@input type='text' id='label' name='label'  maxlength='50' value='${myfavorites.label}' tabIndex='2' />
+				</@formGroup>
+
+				<@formGroup>
+          <@button name='action_modifyMyFavorites' type='submit' tabIndex='3' title='#i18n{portal.util.labelModify}' buttonIcon='plus' />
+          <@button name='view_manageMyFavoritess' type='submit' title='#i18n{portal.util.labelCancel}' buttonIcon='close' color='btn-secondary' />
+				</@formGroup>
+        </fieldset>
+		</@tform>
+	</@columns>
+</@row>
+
+  

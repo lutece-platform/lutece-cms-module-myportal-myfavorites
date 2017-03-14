@@ -1,0 +1,69 @@
+<#include "myfavorites_tabs.html" />
+<#macro radioIconList name default_value icons >
+   <#list icons as icon>
+    <#if default_value=icon.id> 			
+	<input checked="checked" class="radio" type="radio" name="${name}" value="${icon.id}" />
+        <img  src="image?resource_type=myportal_icon_img&id=${icon.id}"
+      <#if icon.width!=-1>
+        width="${icon.width}"
+      </#if> 
+      <#if icon.height!=-1>
+        height="${icon.height}"
+      </#if> 
+	/>
+      <#else>
+	<input class="radio" type="radio" name="${name}" value="${icon.id}" />
+        <img  src="image?resource_type=myportal_icon_img&id=${icon.id}"
+      <#if icon.width!=-1>
+        width="${icon.width}"
+      </#if> 
+      <#if icon.height!=-1>
+	height="${icon.height}"
+      </#if> 
+	/>
+      </#if>
+  </#list>
+</#macro>
+
+
+<@row>
+	<@columns>
+		<@tform class='form-horizontal' action='jsp/site/plugins/myportal/modules/myfavorites/DoActionMyFavorite.jsp'>
+			<fieldset>
+				<legend>#i18n{module.myportal.myfavorites.create_myfavorites.title{i18n_close}</legend>
+				<@messages errors=errors />
+				<input type="hidden" id="id" name="id"/>  
+				<input type="hidden" name="id_widget" value="${id_widget}" />
+				<input type="hidden" name="myfavorites_url_return" value="${myfavorites_url_return}" />
+				<input type="hidden" name="myportal_url_return" value="${myportal_url_return}" />
+		
+          <@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelUrl}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelUrl.help}' mandatory=true>
+						<@input type='text' id='url' name='url' value='${myfavorites.url!}'  maxlength=255 tabIndex='0' />
+	 </@formGroup>
+ 
+		 
+          <@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelLabel}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelLabel.help}' mandatory=true>
+						<@input type='text' id='label' name='label' value='${myfavorites.label!}'  maxlength=50 tabIndex='2' />
+	</@formGroup>
+		<div class="form-group">
+                <label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label" for="id_icon" >#i18n{module.myportal.myfavorites.create_myfavorites.labelIdIcon} * :</label>
+                <div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
+                    <@radioIconList name="id_icon" default_value=-1 icons=icons_list />        
+            </div>
+	</div>
+        <@formGroup>
+          <@button name='action_createMyFavorites' type='submit' tabIndex='3' title='#i18n{portal.util.labelCreate}' buttonIcon='plus' />
+		<button class="btn btn-sm btn-default btn-flat" type="submit" title="Annuler" onclick="javascript:window.history.back();">
+ 		 <i class="fa fa-close" aria-hidden="true"></i>
+			Annuler
+			</button>
+		</@formGroup>
+
+
+
+        </fieldset>
+    </@tform>
+	</@columns>
+</@row>
+
+    

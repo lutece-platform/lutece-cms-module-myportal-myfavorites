@@ -1,0 +1,35 @@
+<div id="mytasks">
+	<h3>#i18n{module.myportal.myfavorites.manage_myfavoritess.title}</h3>
+	<p>
+	
+		
+			<a href="jsp/site/Portal.jsp?page=myfavorites&amp;view=createMyFavorites&amp;myfavorites_url_return=${myfavorites_url_return}&amp;myportal_url_return=${myportal_url_return}&amp;id_widget=${id_widget}" class="ceebox">
+				<span class="">+</span>&nbsp;#i18n{module.myportal.myfavorites.manage_myfavoritess.buttonAdd}
+			</a>
+		
+	</p>
+	<form method="post" action="jsp/site/plugins/myportal/modules/mytasks/DoActionMyTask.jsp">
+		<input type="hidden" name="action" value="do_change_mytasks_status" />
+		<input type="hidden" name="id_widget" value="${id_widget}" />
+		<input type="hidden" name="myfavorites_url_return" value="${myfavorites_url_return}" />
+		<input type="hidden" name="myportal_url_return" value="${myportal_url_return}" />
+	   	<#list myfavorites_list as myfavorite>
+   			<div>
+				
+				<img  src="image?resource_type=myportal_icon_img&id=${myfavorite.idIcon}"/>
+				<a href="${myfavorite.url!}" class="ceebox">
+							${myfavorite.label!}
+				</a>
+					
+				<@aButton href='jsp/site/Portal.jsp?page=myfavorites&action=confirmRemoveMyFavorites&id=${myfavorite.id}&myfavorites_url_return=${myfavorites_url_return}&myportal_url_return=${myportal_url_return}&id_widget=${id_widget}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' showTitle=false color='btn-danger' />
+			</div>
+	   	</#list>
+	   	
+
+	   
+	   	<a href="jsp/site/plugins/myportal/modules/mytasks/DoActionMyTask.jsp?action=do_delete_completed_mytasks&amp;mytasks_url_return=${myfavorites_url_return}&amp;myportal_url_return=${myportal_url_return}&amp;id_widget=${id_widget}" class="mytasks-button">
+	   								
+
+	   	</a>
+	</form>
+</div>

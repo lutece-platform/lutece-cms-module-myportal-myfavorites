@@ -1,0 +1,44 @@
+<#include "myfavorites_tabs.html" />
+<@tabs2 tab="myfavorites" />
+
+<@row>
+	<@columns>
+		<@messages infos=infos />
+		<@tform action='jsp/site/Portal.jsp?page=myfavorites'>
+			<@button type='submit' name='view_createMyFavorites' class='pull-right' buttonIcon='plus' title='#i18n{module.myportal.myfavorites.manage_myfavoritess.buttonAdd}' />
+		</@tform>
+
+    <h4>#i18n{module.myportal.myfavorites.manage_myfavoritess.title{i18n_close}</h4>
+        
+    <@table>
+			<tr>
+				<input type="hidden" id="id" name="id"/>
+					<th>#i18n{module.myportal.myfavorites.manage_myfavoritess.columnUrl}</th>
+					<th>#i18n{module.myportal.myfavorites.manage_myfavoritess.columnIdIcon}</th>
+					<th>#i18n{module.myportal.myfavorites.manage_myfavoritess.columnLabel}</th>
+					<th>#i18n{portal.util.labelActions}</th>
+        </tr>
+				<#list myfavorites_list as myfavorites >
+        <tr>
+					<input type="hidden" id="id" name="id" />
+            <td>
+							${myfavorites.url}
+            </td>    
+            <td>
+							${myfavorites.idIcon}
+            </td>    
+            <td>
+							${myfavorites.label}
+            </td>    
+					<td>
+						<@aButton href='jsp/site/Portal.jsp?page=myfavorites&view=modifyMyFavorites&id=${myfavorites.id}' title='#i18n{portal.util.labelModify}' showTitle=false buttonIcon='pencil-square-o' />
+						
+						<@aButton href='jsp/site/Portal.jsp?page=myfavorites&action=confirmRemoveMyFavorites&id=${myfavorites.id}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' showTitle=false color='btn-danger' />
+					</td>
+        </tr>
+        </#list>
+    </@table>
+	</@columns>
+</@row>
+
+  
