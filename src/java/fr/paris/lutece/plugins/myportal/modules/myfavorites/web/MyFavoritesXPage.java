@@ -31,9 +31,9 @@
  *
  * License 1.0
  */
-  
+
 package fr.paris.lutece.plugins.myportal.modules.myfavorites.web;
- 
+
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,45 +65,41 @@ import fr.paris.lutece.util.url.UrlItem;
 /**
  * This class provides the user interface to manage MyFavorites xpages ( manage, create, modify, remove )
  */
-@Controller( xpageName = "myfavorites" , pageTitleI18nKey = "module.myportal.myfavorites.xpage.myfavorites.pageTitle" , pagePathI18nKey = "module.myportal.myfavorites.xpage.myfavorites.pagePathLabel" )
+@Controller( xpageName = "myfavorites", pageTitleI18nKey = "module.myportal.myfavorites.xpage.myfavorites.pageTitle", pagePathI18nKey = "module.myportal.myfavorites.xpage.myfavorites.pagePathLabel" )
 public class MyFavoritesXPage extends MVCApplication
 {
     /**
      * Generated serial ID
      */
     private static final long serialVersionUID = -2075209499748771950L;
+
     // Templates
-    private static final String TEMPLATE_MANAGE_MYFAVORITESS="/skin/plugins/myportal/modules/myfavorites/manage_myfavoritess.html";
-    private static final String TEMPLATE_CREATE_MYFAVORITES="/skin/plugins/myportal/modules/myfavorites/create_myfavorites.html";
-    private static final String TEMPLATE_MODIFY_MYFAVORITES="/skin/plugins/myportal/modules/myfavorites/modify_myfavorites.html";
-    
+    private static final String TEMPLATE_MANAGE_MYFAVORITESS = "/skin/plugins/myportal/modules/myfavorites/manage_myfavoritess.html";
+    private static final String TEMPLATE_CREATE_MYFAVORITES = "/skin/plugins/myportal/modules/myfavorites/create_myfavorites.html";
+    private static final String TEMPLATE_MODIFY_MYFAVORITES = "/skin/plugins/myportal/modules/myfavorites/modify_myfavorites.html";
+
     // JSP
-    private static final String JSP_PAGE_PORTAL = "jsp/site/Portal.jsp";
     private static final String JSP_PAGE_REMOVE_FAVORITE = "jsp/site/plugins/myportal/modules/myfavorites/DoRemoveMyFavorite.jsp";
     // Parameters
-    private static final String PARAMETER_ID_MYFAVORITES="id";
-    private static final String PARAM_ACTION = "action";
-    private static final String PARAM_PAGE = "page";
+    private static final String PARAMETER_ID_MYFAVORITES = "id";
     private static final String PARAMETER_FAVORITES_URL_RETURN = "myfavorites_url_return";
     private static final String PARAMETER_ID_WIDGET = "id_widget";
     private static final String PARAMETER_MYPORTAL_URL_RETURN = "myportal_url_return";
     private static final String PARAMETER_BACK = "back";
 
-    
     // Markers
     private static final String MARK_MYFAVORITES_LIST = "myfavorites_list";
     private static final String MARK_MYFAVORITES = "myfavorites";
-    
+
     private static final String MARK_MYFAVORITES_URL_RETURN = "myfavorites_url_return";
     private static final String MARK_MYPORTAL_URL_RETURN = "myportal_url_return";
     private static final String MARK_ID_WIDGET = "id_widget";
     private static final String MARK_ICONS_LIST = "icons_list";
     private static final String MARK_FAVORITES_ORDER_LIST = "favorites_order_list";
 
-    
     // Message
     private static final String MESSAGE_CONFIRM_REMOVE_MYFAVORITES = "module.myportal.myfavorites.message.confirmRemoveMyFavorites";
-    
+
     // Views
     private static final String VIEW_MANAGE_MYFAVORITESS = "manageMyFavoritess";
     private static final String VIEW_CREATE_MYFAVORITES = "createMyFavorites";
@@ -111,7 +107,7 @@ public class MyFavoritesXPage extends MVCApplication
 
     // Actions
     private static final String ACTION_CREATE_MYFAVORITES = "createMyFavorites";
-    private static final String ACTION_MODIFY_MYFAVORITES= "modifyMyFavorites";
+    private static final String ACTION_MODIFY_MYFAVORITES = "modifyMyFavorites";
     private static final String ACTION_REMOVE_MYFAVORITES = "removeMyFavorites";
     private static final String ACTION_CONFIRM_REMOVE_MYFAVORITES = "confirmRemoveMyFavorites";
 
@@ -119,28 +115,28 @@ public class MyFavoritesXPage extends MVCApplication
     private static final String INFO_MYFAVORITES_CREATED = "module.myportal.myfavorites.info.myfavorites.created";
     private static final String INFO_MYFAVORITES_UPDATED = "module.myportal.myfavorites.info.myfavorites.updated";
     private static final String INFO_MYFAVORITES_REMOVED = "module.myportal.myfavorites.info.myfavorites.removed";
-    
+
     // Session variable to store working values
     private MyFavorites _myfavorites;
     private final MyFavoritesService _myFavoritesService = SpringContextService.getBean( MyFavoritesService.BEAN_NAME );
 
-    
     @View( value = VIEW_MANAGE_MYFAVORITESS, defaultView = true )
     public XPage getManageMyFavoritess( HttpServletRequest request )
     {
         _myfavorites = null;
-        Map<String, Object> model = getModel(  );
-        model.put( MARK_MYFAVORITES_LIST, MyFavoritesHome.getMyFavoritessList(  ) );
+        Map<String, Object> model = getModel( );
+        model.put( MARK_MYFAVORITES_LIST, MyFavoritesHome.getMyFavoritessList( ) );
 
-        return getXPage( TEMPLATE_MANAGE_MYFAVORITESS, request.getLocale(  ), model );
+        return getXPage( TEMPLATE_MANAGE_MYFAVORITESS, request.getLocale( ), model );
     }
 
     /**
      * Returns the form to create a myfavorites
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code of the myfavorites form
-     * @throws UserNotSignedException 
+     * @throws UserNotSignedException
      */
     @View( VIEW_CREATE_MYFAVORITES )
     public XPage getCreateMyFavorites( HttpServletRequest request ) throws UserNotSignedException
@@ -184,10 +180,11 @@ public class MyFavoritesXPage extends MVCApplication
     /**
      * Process the data capture form of a new myfavorites
      *
-     * @param request The Http Request
+     * @param request
+     *            The Http Request
      * @return The Jsp URL of the process result
-     * @throws SiteMessageException 
-     * @throws UserNotSignedException 
+     * @throws SiteMessageException
+     * @throws UserNotSignedException
      */
     @Action( ACTION_CREATE_MYFAVORITES )
     public String doCreateMyFavorites( HttpServletRequest request ) throws SiteMessageException, UserNotSignedException
@@ -225,41 +222,38 @@ public class MyFavoritesXPage extends MVCApplication
         }
 
         return strUrlReturn;
-      //  return redirectView( request, VIEW_MANAGE_MYFAVORITESS );
     }
 
     /**
-     * Manages the removal form of a myfavorites whose identifier is in the http
-     * request
+     * Manages the removal form of a myfavorites whose identifier is in the http request
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the html code to confirm
      * @throws fr.paris.lutece.portal.service.message.SiteMessageException
-     * @throws UserNotSignedException 
+     * @throws UserNotSignedException
      */
     @Action( ACTION_CONFIRM_REMOVE_MYFAVORITES )
     public XPage getConfirmRemoveMyFavorites( HttpServletRequest request ) throws SiteMessageException, UserNotSignedException
     {
-    	LuteceUser user= getUser(request);
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_MYFAVORITES ) );
         String strMyPortalMyFavoritesUrlReturn = request.getParameter( MARK_MYFAVORITES_URL_RETURN );
 
         UrlItem url = new UrlItem( JSP_PAGE_REMOVE_FAVORITE );
-       // url.addParameter( PARAM_PAGE, MARK_MYFAVORITES );
-      //  url.addParameter( PARAM_ACTION, ACTION_REMOVE_MYFAVORITES );
         url.addParameter( PARAMETER_ID_MYFAVORITES, nId );
         url.addParameter( PARAMETER_FAVORITES_URL_RETURN, strMyPortalMyFavoritesUrlReturn );
-        
-        SiteMessageService.setMessage(request, MESSAGE_CONFIRM_REMOVE_MYFAVORITES, SiteMessage.TYPE_CONFIRMATION, url.getUrl(  ));
+
+        SiteMessageService.setMessage( request, MESSAGE_CONFIRM_REMOVE_MYFAVORITES, SiteMessage.TYPE_CONFIRMATION, url.getUrl( ) );
         return null;
     }
 
     /**
      * Handles the removal form of a myfavorites
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return the jsp URL to display the form to manage myfavoritess
-     * @throws UserNotSignedException 
+     * @throws UserNotSignedException
      */
     @Action( ACTION_REMOVE_MYFAVORITES )
     public String doRemoveMyFavorites( HttpServletRequest request ) throws UserNotSignedException
@@ -279,23 +273,25 @@ public class MyFavoritesXPage extends MVCApplication
     /**
      * Returns the form to update info about a myfavorites
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The HTML form to update info
-     * @throws UserNotSignedException 
+     * @throws UserNotSignedException
      */
     @View( VIEW_MODIFY_MYFAVORITES )
     public XPage getModifyMyFavorites( HttpServletRequest request ) throws UserNotSignedException
     {
-    	LuteceUser user= getUser(request);
+        LuteceUser user = getUser( request );
 
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_MYFAVORITES ) );
 
-        if ( _myfavorites == null  || ( _myfavorites.getId( ) != nId ))
+        if ( _myfavorites == null || ( _myfavorites.getId( ) != nId ) )
         {
             _myfavorites = MyFavoritesHome.findByPrimaryKey( nId );
         }
 
-        Map<String, Object> model = getModel(  );
+        Map<String, Object> model = getModel( );
+
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         String strMyPortalMyFavoritesUrlReturn = request.getParameter( MARK_MYFAVORITES_URL_RETURN );
         String strMyPortalUrlReturn = request.getParameter( PARAMETER_MYPORTAL_URL_RETURN );
@@ -330,9 +326,11 @@ public class MyFavoritesXPage extends MVCApplication
     /**
      * Process the change form of a myfavorites
      *
-     * @param request The Http request
+     * @param request
+     *            The Http request
      * @return The Jsp URL of the process result
-     * @throws UserNotSignedException 
+     * @throws UserNotSignedException
+     * @throws SiteMessageException
      */
     @Action( ACTION_MODIFY_MYFAVORITES )
     public String doModifyMyFavorites( HttpServletRequest request ) throws UserNotSignedException, SiteMessageException
@@ -371,30 +369,32 @@ public class MyFavoritesXPage extends MVCApplication
 
         return strUrlReturn;
     }
-    
+
     /**
      * Gets the user from the request
-     * @param request The HTTP user
+     * 
+     * @param request
+     *            The HTTP user
      * @return The Lutece User
-     * @throws UserNotSignedException exception if user not connected
+     * @throws UserNotSignedException
+     *             exception if user not connected
      */
-    public LuteceUser getUser( HttpServletRequest request )
-        throws UserNotSignedException
+    public LuteceUser getUser( HttpServletRequest request ) throws UserNotSignedException
     {
-        if ( SecurityService.isAuthenticationEnable(  ) )
+        if ( SecurityService.isAuthenticationEnable( ) )
         {
-            LuteceUser user = SecurityService.getInstance(  ).getRemoteUser( request );
+            LuteceUser user = SecurityService.getInstance( ).getRemoteUser( request );
 
             if ( user == null )
             {
-                throw new UserNotSignedException(  );
+                throw new UserNotSignedException( );
             }
 
             return user;
         }
         else
         {
-            throw new PageNotFoundException(  );
+            throw new PageNotFoundException( );
         }
     }
 }

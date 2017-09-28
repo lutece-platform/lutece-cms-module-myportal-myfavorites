@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.myportal.modules.myfavorites.business;
 
 import fr.paris.lutece.test.LuteceTestCase;
 
-
 public class MyFavoritesBusinessTest extends LuteceTestCase
 {
     private final static String URL1 = "Url1";
@@ -46,10 +45,10 @@ public class MyFavoritesBusinessTest extends LuteceTestCase
     private final static String LABEL1 = "Label1";
     private final static String LABEL2 = "Label2";
 
-    public void testBusiness(  )
+    public void testBusiness( )
     {
         // Initialize an object
-        MyFavorites myFavorites = new MyFavorites();
+        MyFavorites myFavorites = new MyFavorites( );
         myFavorites.setUrl( URL1 );
         myFavorites.setIdIcon( IDICON1 );
         myFavorites.setLabel( LABEL1 );
@@ -57,9 +56,9 @@ public class MyFavoritesBusinessTest extends LuteceTestCase
         // Create test
         MyFavoritesHome.create( myFavorites );
         MyFavorites myFavoritesStored = MyFavoritesHome.findByPrimaryKey( myFavorites.getId( ) );
-        assertEquals( myFavoritesStored.getUrl() , myFavorites.getUrl( ) );
-        assertEquals( myFavoritesStored.getIdIcon() , myFavorites.getIdIcon( ) );
-        assertEquals( myFavoritesStored.getLabel() , myFavorites.getLabel( ) );
+        assertEquals( myFavoritesStored.getUrl( ), myFavorites.getUrl( ) );
+        assertEquals( myFavoritesStored.getIdIcon( ), myFavorites.getIdIcon( ) );
+        assertEquals( myFavoritesStored.getLabel( ), myFavorites.getLabel( ) );
 
         // Update test
         myFavorites.setUrl( URL2 );
@@ -67,18 +66,18 @@ public class MyFavoritesBusinessTest extends LuteceTestCase
         myFavorites.setLabel( LABEL2 );
         MyFavoritesHome.update( myFavorites );
         myFavoritesStored = MyFavoritesHome.findByPrimaryKey( myFavorites.getId( ) );
-        assertEquals( myFavoritesStored.getUrl() , myFavorites.getUrl( ) );
-        assertEquals( myFavoritesStored.getIdIcon() , myFavorites.getIdIcon( ) );
-        assertEquals( myFavoritesStored.getLabel() , myFavorites.getLabel( ) );
+        assertEquals( myFavoritesStored.getUrl( ), myFavorites.getUrl( ) );
+        assertEquals( myFavoritesStored.getIdIcon( ), myFavorites.getIdIcon( ) );
+        assertEquals( myFavoritesStored.getLabel( ), myFavorites.getLabel( ) );
 
         // List test
-        MyFavoritesHome.getMyFavoritessList();
+        MyFavoritesHome.getMyFavoritessList( );
 
         // Delete test
         MyFavoritesHome.remove( myFavorites.getId( ) );
         myFavoritesStored = MyFavoritesHome.findByPrimaryKey( myFavorites.getId( ) );
         assertNull( myFavoritesStored );
-        
+
     }
 
 }

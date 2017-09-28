@@ -49,7 +49,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  * MyTasks Widget Handler
@@ -78,25 +77,24 @@ public class MyFavoritesWidgetHandler implements WidgetHandler
      */
     public String renderWidget( Widget widget, LuteceUser user, HttpServletRequest request )
     {
-        List<MyFavorites> listMyFavorites = MyFavoritesHome.getMyFavoritessList(user.getName( ));
-       // List<MyFavorites> listMyFavorites = MyFavoritesHome.getMyFavoritessList();
-        Locale locale = request.getLocale(  );
+        List<MyFavorites> listMyFavorites = MyFavoritesHome.getMyFavoritessList( user.getName( ) );
+        Locale locale = request.getLocale( );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<String, Object>( );
         model.put( MARK_FAVORITES_LIST, listMyFavorites );
         model.put( MARK_FAVORITES_URL_RETURN, AppPropertiesService.getProperty( PROPERTY_FAVORITEs_URL_RETURN ) );
         model.put( MARK_MYPORTAL_URL_RETURN, AppPropertiesService.getProperty( PROPERTY_MYPORTAL_URL_RETURN ) );
-        model.put( MARK_ID_WIDGET, widget.getIdWidget(  ) );
+        model.put( MARK_ID_WIDGET, widget.getIdWidget( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_WIDGET_MYTASKS, locale, model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * {@inheritDoc }
      */
-    public String getName(  )
+    public String getName( )
     {
         return NAME;
     }
@@ -104,7 +102,7 @@ public class MyFavoritesWidgetHandler implements WidgetHandler
     /**
      * {@inheritDoc }
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return DESCRIPTION;
     }
@@ -112,7 +110,7 @@ public class MyFavoritesWidgetHandler implements WidgetHandler
     /**
      * {@inheritDoc}
      */
-    public boolean isCustomizable(  )
+    public boolean isCustomizable( )
     {
         return true;
     }
