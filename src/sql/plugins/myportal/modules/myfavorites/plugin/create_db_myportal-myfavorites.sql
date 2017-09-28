@@ -10,6 +10,6 @@ url varchar(255) default '' NOT NULL,
 id_icon int(11) default '0',
 label varchar(50) default '' NOT NULL,
 user_id varchar(50) default '',
-
+myfavorites_order int(6) default '1' NOT NULL,
 PRIMARY KEY (id_my_favorites)
 );

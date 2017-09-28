@@ -21,6 +21,7 @@
 							${myfavorite.label!}
 				</a>
 					
+				<@aButton href='jsp/site/Portal.jsp?page=myfavorites&view=modifyMyFavorites&id=${myfavorite.id}&myfavorites_url_return=${myfavorites_url_return}&myportal_url_return=${myportal_url_return}&id_widget=${id_widget}' title='#i18n{portal.util.labelModify}' buttonIcon='edit' showTitle=false color='btn-secondary' />
 				<@aButton href='jsp/site/Portal.jsp?page=myfavorites&action=confirmRemoveMyFavorites&id=${myfavorite.id}&myfavorites_url_return=${myfavorites_url_return}&myportal_url_return=${myportal_url_return}&id_widget=${id_widget}' title='#i18n{portal.util.labelDelete}' buttonIcon='trash' showTitle=false color='btn-danger' />
 			</div>
 	   	</#list>

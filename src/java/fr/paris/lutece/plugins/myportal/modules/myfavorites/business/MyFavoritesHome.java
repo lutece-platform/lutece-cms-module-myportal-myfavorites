@@ -31,7 +31,7 @@
  *
  * License 1.0
  */
- package fr.paris.lutece.plugins.myportal.modules.myfavorites.business;
+package fr.paris.lutece.plugins.myportal.modules.myfavorites.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
@@ -52,14 +52,16 @@ public final class MyFavoritesHome
     /**
      * Private constructor - this class need not be instantiated
      */
-    private MyFavoritesHome(  )
+    private MyFavoritesHome( )
     {
     }
 
     /**
      * Create an instance of the myFavorites class
-     * @param myFavorites The instance of the MyFavorites which contains the informations to store
-     * @return The  instance of myFavorites which has been created with its primary key.
+     * 
+     * @param myFavorites
+     *            The instance of the MyFavorites which contains the informations to store
+     * @return The instance of myFavorites which has been created with its primary key.
      */
     public static MyFavorites create( MyFavorites myFavorites )
     {
@@ -70,8 +72,10 @@ public final class MyFavoritesHome
 
     /**
      * Update of the myFavorites which is specified in parameter
-     * @param myFavorites The instance of the MyFavorites which contains the data to store
-     * @return The instance of the  myFavorites which has been updated
+     * 
+     * @param myFavorites
+     *            The instance of the MyFavorites which contains the data to store
+     * @return The instance of the myFavorites which has been updated
      */
     public static MyFavorites update( MyFavorites myFavorites )
     {
@@ -82,7 +86,9 @@ public final class MyFavoritesHome
 
     /**
      * Remove the myFavorites whose identifier is specified in parameter
-     * @param nKey The myFavorites Id
+     * 
+     * @param nKey
+     *            The myFavorites Id
      */
     public static void remove( int nKey )
     {
@@ -91,16 +97,19 @@ public final class MyFavoritesHome
 
     /**
      * Returns an instance of a myFavorites whose identifier is specified in parameter
-     * @param nKey The myFavorites primary key
+     * 
+     * @param nKey
+     *            The myFavorites primary key
      * @return an instance of MyFavorites
      */
     public static MyFavorites findByPrimaryKey( int nKey )
     {
-        return _dao.load( nKey, _plugin);
+        return _dao.load( nKey, _plugin );
     }
 
     /**
      * Load the data of all the myFavorites objects and returns them as a list
+     * 
      * @return the list which contains the data of all the myFavorites objects
      */
     public static List<MyFavorites> getMyFavoritessList( )
@@ -110,30 +119,70 @@ public final class MyFavoritesHome
 
     /**
      * Load the data of all the myFavorites objects and returns them as a list
+     * 
      * @return the list which contains the data of all the myFavorites objects
      */
-    public static List<MyFavorites> getMyFavoritessList(String idUser )
+    public static List<MyFavorites> getMyFavoritessList( String idUser )
     {
         return _dao.selectMyFavoritesList( idUser, _plugin );
     }
-    
+
     /**
      * Load the id of all the myFavorites objects and returns them as a list
+     * 
      * @return the list which contains the id of all the myFavorites objects
      */
     public static List<Integer> getIdMyFavoritessList( )
     {
         return _dao.selectIdMyFavoritessList( _plugin );
     }
-    
+
     /**
      * Load the data of all the myFavorites objects and returns them as a referenceList
+     * 
      * @return the referenceList which contains the data of all the myFavorites objects
      */
     public static ReferenceList getMyFavoritessReferenceList( )
     {
-        return _dao.selectMyFavoritessReferenceList(_plugin );
+        return _dao.selectMyFavoritessReferenceList( _plugin );
     }
-    
-}
 
+    /**
+     * Load the list of the order of the favorites of a user
+     * 
+     * @param strIdUser
+     *            the id of the user
+     * @return the list of all order of the favorites of the user
+     */
+    public static List<Integer> getUserFavoritesOrder( String strIdUser )
+    {
+        return _dao.selectMyFavoritesOrderList( strIdUser, _plugin );
+    }
+
+    /**
+     * Return the favorite of the user with the specified order null otherwise
+     * 
+     * @param strIdUser
+     *            the id of the user
+     * @param nOrder
+     *            the order of the Favorite
+     * @return the favorite of the user with the specified order null otherwise
+     */
+    public static MyFavorites getUserFavoriteWithOrder( String strIdUser, int nOrder )
+    {
+        return _dao.selectUserFavoriteByOrder( strIdUser, nOrder, _plugin );
+    }
+
+    /**
+     * Update the favorites with the specified id with the new order
+     * 
+     * @param nIdFavorites
+     *            the id of the favorites
+     * @param nNewOrder
+     *            the new ordr of the favorites
+     */
+    public static void updateFavoriteOrder( int nIdFavorites, int nNewOrder )
+    {
+        _dao.updateFavoritesOrder( nIdFavorites, nNewOrder, _plugin );
+    }
+}

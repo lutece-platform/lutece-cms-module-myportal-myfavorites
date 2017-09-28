@@ -8,5 +8,6 @@
 	<!-- Widget handler -->
     <bean id="myportal-myfavorites.widgetHandlerMyFavorites" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesWidgetHandler" />
     
+	<bean id="myportal-myfavorites.myfavoritesservice" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService" />
 
 </beans>

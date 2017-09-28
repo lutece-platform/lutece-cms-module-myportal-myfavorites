@@ -1,29 +1,52 @@
-<#include "myfavorites_tabs.html" />
-<@tabs2 tab="myfavorites" />
+<#macro radioIconList name default_value icons >
+<#list icons as icon>
+  <label class="radio-inline">
+  <#if default_value=icon.id>
+  	<input checked="checked" class="radio" type="radio" name="${name}" value="${icon.id}">
+    <img class="widget-icon img-responsive"  src="image?resource_type=myportal_icon_img&id=${icon.id}" <#if icon.width!=-1>width="${icon.width}"</#if> <#if icon.height!=-1> height="${icon.height}"</#if>>
+  <#else>
+	 <input class="radio" type="radio" name="${name}" value="${icon.id}">
+    <img class="widget-icon img-responsive" src="image?resource_type=myportal_icon_img&id=${icon.id}" <#if icon.width!=-1>width="${icon.width}"</#if> <#if icon.height!=-1>height="${icon.height}"</#if>>
+  </#if>
+  </label>
+</#list>
+</#macro>
 
 <@row>
 	<@columns>
-		<@tform class='form-horizontal' action='jsp/site/Portal.jsp?page=myfavorites'>
+		<@tform class='form-horizontal' action='jsp/site/plugins/myportal/modules/myfavorites/DoModifyMyFavorite.jsp'>
 			<fieldset>
-				<legend>#i18n{module.myportal.myfavorites.modify_myfavorites.title{i18n_close}</legend>
+				<legend>#i18n{module.myportal.myfavorites.modify_myfavorites.title}</legend>
 				<@messages errors=errors />
 				<input type="hidden" id="id" name="id" value="${myfavorites.id}"/>
+				<input type="hidden" name="id_widget" value="${id_widget}" />
+				<input type="hidden" name="myfavorites_url_return" value="${myfavorites_url_return}" />
+				<input type="hidden" name="myportal_url_return" value="${myportal_url_return}" />
+				
+				<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelLabel}' mandatory=true>
+          			<@input type='text' id='label' name='label'  maxlength=50 value='${myfavorites.label}' tabIndex='0' />
+				</@formGroup>
 				
 				<@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelUrl}' mandatory=true>
-          <@input type='text' id='url' name='url'  maxlength='255' value='${myfavorites.url}' tabIndex='0' />
+          			<@input type='text' id='url' name='url'  maxlength=255 value='${myfavorites.url}' tabIndex='1' />
 				</@formGroup>
+				
 				<@formGroup labelFor='id_icon' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelIdIcon}' mandatory=true>
-          <@input type='text' id='id_icon' name='id_icon'  value='${myfavorites.idIcon}' tabIndex='1' />
-				</@formGroup>
-				<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelLabel}' mandatory=true>
-          <@input type='text' id='label' name='label'  maxlength='50' value='${myfavorites.label}' tabIndex='2' />
+					<@radioIconList name="id_icon" default_value=myfavorites.idIcon icons=icons_list />
 				</@formGroup>
 
-				<@formGroup>
-          <@button name='action_modifyMyFavorites' type='submit' tabIndex='3' title='#i18n{portal.util.labelModify}' buttonIcon='plus' />
-          <@button name='view_manageMyFavoritess' type='submit' title='#i18n{portal.util.labelCancel}' buttonIcon='close' color='btn-secondary' />
+				<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelOrder}'>
+					<@comboWithParams name="order" items=favorites_order_list default_value='${myfavorites.order}' additionalParameters="class='form-control'" />
 				</@formGroup>
-        </fieldset>
+				
+				<@formGroup>
+          			<@button name='action_modifyMyFavorites' type='submit' tabIndex='3' title='#i18n{portal.util.labelModify}' buttonIcon='plus' />
+					<button class="btn btn-sm btn-default btn-flat" name="back" type="submit" title="#i18n{portal.util.labelCancel}" formnovalidate>
+						<i class="fa fa-close" aria-hidden="true"></i>
+						#i18n{portal.util.labelCancel}
+					</button>
+				</@formGroup>
+        	</fieldset>
 		</@tform>
 	</@columns>
 </@row>

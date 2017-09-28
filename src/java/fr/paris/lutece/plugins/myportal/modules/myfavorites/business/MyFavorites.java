@@ -30,7 +30,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * License 1.0
- */ 
+ */
 package fr.paris.lutece.plugins.myportal.modules.myfavorites.business;
 
 import javax.validation.constraints.*;
@@ -39,28 +39,31 @@ import java.io.Serializable;
 
 /**
  * This is the business class for the object MyFavorites
- */ 
+ */
 public class MyFavorites implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    // Variables declarations 
+    // Variables declarations
     private int _nId;
-    
+
     @NotEmpty( message = "#i18n{module.myportal.myfavorites.validation.myfavorites.Url.notEmpty}" )
-    @Size( max = 255 , message = "#i18n{module.myportal.myfavorites.validation.myfavorites.Url.size}" ) 
+    @Size( max = 255, message = "#i18n{module.myportal.myfavorites.validation.myfavorites.Url.size}" )
     private String _strUrl;
-    
+
     private int _nIdIcon;
-    
+
     @NotEmpty( message = "#i18n{module.myportal.myfavorites.validation.myfavorites.Label.notEmpty}" )
-    @Size( max = 50 , message = "#i18n{module.myportal.myfavorites.validation.myfavorites.Label.size}" ) 
+    @Size( max = 50, message = "#i18n{module.myportal.myfavorites.validation.myfavorites.Label.size}" )
     private String _strLabel;
-     
+
     private String _strIdUser;
+
+    private int _nOrder;
 
     /**
      * Returns the Id
+     * 
      * @return The Id
      */
     public int getId( )
@@ -70,15 +73,18 @@ public class MyFavorites implements Serializable
 
     /**
      * Sets the Id
-     * @param nId The Id
-     */ 
+     * 
+     * @param nId
+     *            The Id
+     */
     public void setId( int nId )
     {
         _nId = nId;
     }
-    
+
     /**
      * Returns the Url
+     * 
      * @return The Url
      */
     public String getUrl( )
@@ -88,15 +94,18 @@ public class MyFavorites implements Serializable
 
     /**
      * Sets the Url
-     * @param strUrl The Url
-     */ 
+     * 
+     * @param strUrl
+     *            The Url
+     */
     public void setUrl( String strUrl )
     {
         _strUrl = strUrl;
     }
-    
+
     /**
      * Returns the IdIcon
+     * 
      * @return The IdIcon
      */
     public int getIdIcon( )
@@ -106,15 +115,18 @@ public class MyFavorites implements Serializable
 
     /**
      * Sets the IdIcon
-     * @param nIdIcon The IdIcon
-     */ 
+     * 
+     * @param nIdIcon
+     *            The IdIcon
+     */
     public void setIdIcon( int nIdIcon )
     {
         _nIdIcon = nIdIcon;
     }
-    
+
     /**
      * Returns the Label
+     * 
      * @return The Label
      */
     public String getLabel( )
@@ -124,15 +136,18 @@ public class MyFavorites implements Serializable
 
     /**
      * Sets the Label
-     * @param strLabel The Label
-     */ 
+     * 
+     * @param strLabel
+     *            The Label
+     */
     public void setLabel( String strLabel )
     {
         _strLabel = strLabel;
     }
-    
+
     /**
      * Returns the IdUser
+     * 
      * @return The IdUser
      */
     public String getIdUser( )
@@ -142,10 +157,33 @@ public class MyFavorites implements Serializable
 
     /**
      * Sets the IdUser
-     * @param strIdUser The IdUser
-     */ 
+     * 
+     * @param strIdUser
+     *            The IdUser
+     */
     public void setIdUser( String strIdUser )
     {
         _strIdUser = strIdUser;
+    }
+
+    /**
+     * Returns the order
+     * 
+     * @return the order
+     */
+    public int getOrder( )
+    {
+        return _nOrder;
+    }
+
+    /**
+     * Sets the order
+     * 
+     * @param order
+     *            the order to set
+     */
+    public void setOrder( int order )
+    {
+        this._nOrder = order;
     }
 }

@@ -34,29 +34,33 @@
   
 package fr.paris.lutece.plugins.myportal.modules.myfavorites.web;
  
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavorites;
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavoritesHome;
+import fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService;
 import fr.paris.lutece.plugins.myportal.service.IconService;
-import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
-import fr.paris.lutece.portal.web.constants.Messages;
-import fr.paris.lutece.portal.web.xpages.XPage;
-import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
-import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
-import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
-import fr.paris.lutece.util.url.UrlItem;
-import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.message.SiteMessage;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
+import fr.paris.lutece.portal.service.message.SiteMessageService;
 import fr.paris.lutece.portal.service.page.PageNotFoundException;
 import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest; 
-
-import org.apache.commons.lang.StringUtils;
+import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
+import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
+import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
+import fr.paris.lutece.portal.util.mvc.xpage.annotations.Controller;
+import fr.paris.lutece.portal.web.constants.Messages;
+import fr.paris.lutece.portal.web.xpages.XPage;
+import fr.paris.lutece.util.ReferenceList;
+import fr.paris.lutece.util.url.UrlItem;
 
 /**
  * This class provides the user interface to manage MyFavorites xpages ( manage, create, modify, remove )
@@ -64,6 +68,10 @@ import org.apache.commons.lang.StringUtils;
 @Controller( xpageName = "myfavorites" , pageTitleI18nKey = "module.myportal.myfavorites.xpage.myfavorites.pageTitle" , pagePathI18nKey = "module.myportal.myfavorites.xpage.myfavorites.pagePathLabel" )
 public class MyFavoritesXPage extends MVCApplication
 {
+    /**
+     * Generated serial ID
+     */
+    private static final long serialVersionUID = -2075209499748771950L;
     // Templates
     private static final String TEMPLATE_MANAGE_MYFAVORITESS="/skin/plugins/myportal/modules/myfavorites/manage_myfavoritess.html";
     private static final String TEMPLATE_CREATE_MYFAVORITES="/skin/plugins/myportal/modules/myfavorites/create_myfavorites.html";
@@ -79,6 +87,7 @@ public class MyFavoritesXPage extends MVCApplication
     private static final String PARAMETER_FAVORITES_URL_RETURN = "myfavorites_url_return";
     private static final String PARAMETER_ID_WIDGET = "id_widget";
     private static final String PARAMETER_MYPORTAL_URL_RETURN = "myportal_url_return";
+    private static final String PARAMETER_BACK = "back";
 
     
     // Markers
@@ -89,6 +98,7 @@ public class MyFavoritesXPage extends MVCApplication
     private static final String MARK_MYPORTAL_URL_RETURN = "myportal_url_return";
     private static final String MARK_ID_WIDGET = "id_widget";
     private static final String MARK_ICONS_LIST = "icons_list";
+    private static final String MARK_FAVORITES_ORDER_LIST = "favorites_order_list";
 
     
     // Message
@@ -112,6 +122,7 @@ public class MyFavoritesXPage extends MVCApplication
     
     // Session variable to store working values
     private MyFavorites _myfavorites;
+    private final MyFavoritesService _myFavoritesService = SpringContextService.getBean( MyFavoritesService.BEAN_NAME );
 
     
     @View( value = VIEW_MANAGE_MYFAVORITESS, defaultView = true )
@@ -134,18 +145,18 @@ public class MyFavoritesXPage extends MVCApplication
     @View( VIEW_CREATE_MYFAVORITES )
     public XPage getCreateMyFavorites( HttpServletRequest request ) throws UserNotSignedException
     {
-    	LuteceUser user= getUser(request);
-        _myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites(  );
+        LuteceUser user = getUser( request );
+        _myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites( );
 
-        Map<String, Object> model = getModel(  );
-        
+        Map<String, Object> model = getModel( );
+
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         String strMyPortalMyFavoritesUrlReturn = request.getParameter( MARK_MYFAVORITES_URL_RETURN );
         String strMyPortalUrlReturn = request.getParameter( PARAMETER_MYPORTAL_URL_RETURN );
 
         if ( StringUtils.isBlank( strMyPortalMyFavoritesUrlReturn ) )
         {
-        	strMyPortalMyFavoritesUrlReturn = StringUtils.EMPTY;
+            strMyPortalMyFavoritesUrlReturn = StringUtils.EMPTY;
         }
 
         if ( StringUtils.isBlank( strMyPortalUrlReturn ) )
@@ -155,16 +166,19 @@ public class MyFavoritesXPage extends MVCApplication
 
         if ( StringUtils.isNotBlank( strIdWidget ) && StringUtils.isNumeric( strIdWidget ) )
         {
-        	model.put( MARK_ICONS_LIST, IconService.getInstance().getIconFO( ));
+            model.put( MARK_ICONS_LIST, IconService.getInstance( ).getIconFO( ) );
             model.put( PARAMETER_FAVORITES_URL_RETURN, strMyPortalMyFavoritesUrlReturn );
             model.put( MARK_MYPORTAL_URL_RETURN, strMyPortalUrlReturn );
             model.put( MARK_ID_WIDGET, strIdWidget );
-        
+
+            String strIdUser = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
+            ReferenceList listOrderUserFavorites = _myFavoritesService.getUserOrderFavoritesListForCreation( strIdUser );
+            model.put( MARK_FAVORITES_ORDER_LIST, listOrderUserFavorites );
         }
-        
-            model.put( MARK_MYFAVORITES, _myfavorites );
-           
-        return getXPage( TEMPLATE_CREATE_MYFAVORITES, request.getLocale(  ), model );
+
+        model.put( MARK_MYFAVORITES, _myfavorites );
+
+        return getXPage( TEMPLATE_CREATE_MYFAVORITES, request.getLocale( ), model );
     }
 
     /**
@@ -178,24 +192,35 @@ public class MyFavoritesXPage extends MVCApplication
     @Action( ACTION_CREATE_MYFAVORITES )
     public String doCreateMyFavorites( HttpServletRequest request ) throws SiteMessageException, UserNotSignedException
     {
-    	LuteceUser user= getUser(request);
-    	_myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites(  );
-        populate( _myfavorites, request );
+        // Manage the case where the user cancel his action
         String strUrlReturn = request.getParameter( PARAMETER_FAVORITES_URL_RETURN );
-        String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
-        _myfavorites.setIdUser(user.getName( ));
+        if ( request.getParameter( PARAMETER_BACK ) != null && StringUtils.isNotEmpty( strUrlReturn ) )
+        {
+            return strUrlReturn;
+        }
+
+        LuteceUser user = getUser( request );
+
+        // Populate MyFavorites
+        _myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites( );
+        populate( _myfavorites, request );
+        _myfavorites.setIdUser( user.getName( ) );
 
         // Check constraints
         if ( !validateBean( _myfavorites, getLocale( request ) ) )
         {
-        	SiteMessageService.setMessage( request, Messages.MANDATORY_FIELDS, SiteMessage.TYPE_ERROR );
+            SiteMessageService.setMessage( request, Messages.MANDATORY_FIELDS, SiteMessage.TYPE_ERROR );
         }
+
+        String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         if ( StringUtils.isNotBlank( strIdWidget ) && StringUtils.isNumeric( strIdWidget ) )
         {
-        	MyFavoritesHome.create( _myfavorites );
+            String strUserName = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
+            _myFavoritesService.manageMyFavoritesCreation( strUserName, _myfavorites );
             addInfo( INFO_MYFAVORITES_CREATED, getLocale( request ) );
-        	
-        }else{
+        }
+        else
+        {
             SiteMessageService.setMessage( request, Messages.MANDATORY_FIELDS, SiteMessage.TYPE_ERROR );
         }
 
@@ -239,10 +264,13 @@ public class MyFavoritesXPage extends MVCApplication
     @Action( ACTION_REMOVE_MYFAVORITES )
     public String doRemoveMyFavorites( HttpServletRequest request ) throws UserNotSignedException
     {
-    	LuteceUser user= getUser(request);
+        LuteceUser user = getUser( request );
         String strUrlReturn = request.getParameter( PARAMETER_FAVORITES_URL_RETURN );
+
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_MYFAVORITES ) );
-        MyFavoritesHome.remove( nId );
+        String strIdUser = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
+        _myFavoritesService.manageMyFavoritesRemoving( nId, strIdUser );
+
         addInfo( INFO_MYFAVORITES_REMOVED, getLocale( request ) );
 
         return strUrlReturn;
@@ -268,9 +296,35 @@ public class MyFavoritesXPage extends MVCApplication
         }
 
         Map<String, Object> model = getModel(  );
+        String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
+        String strMyPortalMyFavoritesUrlReturn = request.getParameter( MARK_MYFAVORITES_URL_RETURN );
+        String strMyPortalUrlReturn = request.getParameter( PARAMETER_MYPORTAL_URL_RETURN );
+
+        if ( StringUtils.isBlank( strMyPortalMyFavoritesUrlReturn ) )
+        {
+            strMyPortalMyFavoritesUrlReturn = StringUtils.EMPTY;
+        }
+
+        if ( StringUtils.isBlank( strMyPortalUrlReturn ) )
+        {
+            strMyPortalUrlReturn = StringUtils.EMPTY;
+        }
+
+        if ( StringUtils.isNotBlank( strIdWidget ) && StringUtils.isNumeric( strIdWidget ) )
+        {
+            model.put( MARK_ICONS_LIST, IconService.getInstance( ).getIconFO( ) );
+            model.put( PARAMETER_FAVORITES_URL_RETURN, strMyPortalMyFavoritesUrlReturn );
+            model.put( MARK_MYPORTAL_URL_RETURN, strMyPortalUrlReturn );
+            model.put( MARK_ID_WIDGET, strIdWidget );
+        }
+
         model.put( MARK_MYFAVORITES, _myfavorites );
-        
-        return getXPage( TEMPLATE_MODIFY_MYFAVORITES, request.getLocale(  ), model );
+
+        String strIdUser = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
+        ReferenceList listOrderUserFavorites = _myFavoritesService.getUserOrderFavorites( strIdUser );
+        model.put( MARK_FAVORITES_ORDER_LIST, listOrderUserFavorites );
+
+        return getXPage( TEMPLATE_MODIFY_MYFAVORITES, request.getLocale( ), model );
     }
 
     /**
@@ -281,22 +335,41 @@ public class MyFavoritesXPage extends MVCApplication
      * @throws UserNotSignedException 
      */
     @Action( ACTION_MODIFY_MYFAVORITES )
-    public XPage doModifyMyFavorites( HttpServletRequest request ) throws UserNotSignedException
+    public String doModifyMyFavorites( HttpServletRequest request ) throws UserNotSignedException, SiteMessageException
     {
-    	LuteceUser user= getUser(request);
+        // Manage the case where the user cancel his action
+        String strUrlReturn = request.getParameter( PARAMETER_FAVORITES_URL_RETURN );
+        if ( request.getParameter( PARAMETER_BACK ) != null && StringUtils.isNotEmpty( strUrlReturn ) )
+        {
+            return strUrlReturn;
+        }
 
+        LuteceUser user = getUser( request );
+
+        int nIdMyFavorites = NumberUtils.toInt( request.getParameter( PARAMETER_ID_MYFAVORITES ), NumberUtils.INTEGER_ZERO );
+        MyFavorites myFavorites = MyFavoritesHome.findByPrimaryKey( nIdMyFavorites );
+
+        int nOrderOrigin = NumberUtils.INTEGER_ZERO;
+        if ( myFavorites != null )
+        {
+            nOrderOrigin = myFavorites.getOrder( );
+        }
+
+        _myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites( );
         populate( _myfavorites, request );
+        _myfavorites.setIdUser( user.getName( ) );
 
         // Check constraints
         if ( !validateBean( _myfavorites, getLocale( request ) ) )
         {
-            return redirect( request, VIEW_MODIFY_MYFAVORITES, PARAMETER_ID_MYFAVORITES, _myfavorites.getId( ) );
+            SiteMessageService.setMessage( request, Messages.MANDATORY_FIELDS, SiteMessage.TYPE_ERROR );
         }
 
-        MyFavoritesHome.update( _myfavorites );
+        String strIdUser = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
+        _myFavoritesService.manageModifyMyFavorites( _myfavorites, strIdUser, nOrderOrigin );
         addInfo( INFO_MYFAVORITES_UPDATED, getLocale( request ) );
 
-        return redirectView( request, VIEW_MANAGE_MYFAVORITESS );
+        return strUrlReturn;
     }
     
     /**

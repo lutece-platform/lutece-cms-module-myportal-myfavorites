@@ -41,6 +41,8 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 /**
  * This class provides Data Access methods for MyFavorites objects
  */
@@ -48,33 +50,36 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
 {
     // Constants
     private static final String SQL_QUERY_NEW_PK = "SELECT max( id_my_favorites ) FROM myportal_myfavorites_myfavorites";
-    private static final String SQL_QUERY_SELECT = "SELECT id_my_favorites, url, id_icon, label, user_id FROM myportal_myfavorites_myfavorites WHERE id_my_favorites = ?";
-    private static final String SQL_QUERY_INSERT = "INSERT INTO myportal_myfavorites_myfavorites ( id_my_favorites, url, id_icon, label, user_id ) VALUES ( ?, ?, ?, ?, ? ) ";
+    private static final String SQL_QUERY_SELECT = "SELECT id_my_favorites, url, id_icon, label, user_id, myfavorites_order FROM myportal_myfavorites_myfavorites WHERE id_my_favorites = ?";
+    private static final String SQL_QUERY_INSERT = "INSERT INTO myportal_myfavorites_myfavorites ( id_my_favorites, url, id_icon, label, user_id, myfavorites_order ) VALUES ( ?, ?, ?, ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM myportal_myfavorites_myfavorites WHERE id_my_favorites = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE myportal_myfavorites_myfavorites SET id_my_favorites = ?, url = ?, id_icon = ?, label = ?, user_id=? WHERE id_my_favorites = ?";
-    private static final String SQL_QUERY_SELECTALL = "SELECT id_my_favorites, url, id_icon, label, user_id FROM myportal_myfavorites_myfavorites";
+    private static final String SQL_QUERY_UPDATE = "UPDATE myportal_myfavorites_myfavorites SET id_my_favorites = ?, url = ?, id_icon = ?, label = ?, user_id = ?, myfavorites_order = ? WHERE id_my_favorites = ?";
+    private static final String SQL_QUERY_SELECTALL = "SELECT id_my_favorites, url, id_icon, label, user_id, myfavorites_order FROM myportal_myfavorites_myfavorites";
     private static final String SQL_QUERY_SELECTALL_ID = "SELECT id_my_favorites FROM myportal_myfavorites_myfavorites";
-    
-    private static final String SQL_QUERY_SELECT_BY_USER = "SELECT id_my_favorites, url, id_icon, label, user_id FROM myportal_myfavorites_myfavorites WHERE user_id = ?";
+    private static final String SQL_QUERY_SELECT_BY_USER = "SELECT id_my_favorites, url, id_icon, label, user_id, myfavorites_order FROM myportal_myfavorites_myfavorites WHERE user_id = ? ORDER BY myfavorites_order";
+    private static final String SQL_QUERY_SELECT_ORDER_BY_USER = "SELECT myfavorites_order FROM myportal_myfavorites_myfavorites WHERE user_id = ? ORDER BY myfavorites_order";
+    private static final String SQL_QUERY_SELECT_BY_ORDER = "SELECT id_my_favorites, url, id_icon, label, user_id, myfavorites_order FROM myportal_myfavorites_myfavorites WHERE user_id = ? AND myfavorites_order = ?";
+    private static final String SQL_QUERY_UPDATE_ORDER = "UPDATE myportal_myfavorites_myfavorites SET myfavorites_order = ? WHERE id_my_favorites = ?";
 
-    
     /**
      * Generates a new primary key
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return The new primary key
      */
-    public int newPrimaryKey( Plugin plugin)
+    public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK , plugin  );
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
         daoUtil.executeQuery( );
         int nKey = 1;
 
-        if( daoUtil.next( ) )
+        if ( daoUtil.next( ) )
         {
             nKey = daoUtil.getInt( 1 ) + 1;
         }
 
-        daoUtil.free();
+        daoUtil.free( );
         return nKey;
     }
 
@@ -87,13 +92,14 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
         myFavorites.setId( newPrimaryKey( plugin ) );
         int nIndex = 1;
-        
-        daoUtil.setInt( nIndex++ , myFavorites.getId( ) );
-        daoUtil.setString( nIndex++ , myFavorites.getUrl( ) );
-        daoUtil.setInt( nIndex++ , myFavorites.getIdIcon( ) );
-        daoUtil.setString( nIndex++ , myFavorites.getLabel( ) );
-        daoUtil.setString( nIndex++ , myFavorites.getIdUser( ));
-        
+
+        daoUtil.setInt( nIndex++, myFavorites.getId( ) );
+        daoUtil.setString( nIndex++, myFavorites.getUrl( ) );
+        daoUtil.setInt( nIndex++, myFavorites.getIdIcon( ) );
+        daoUtil.setString( nIndex++, myFavorites.getLabel( ) );
+        daoUtil.setString( nIndex++, myFavorites.getIdUser( ) );
+        daoUtil.setInt( nIndex++, myFavorites.getOrder( ) );
+
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -105,20 +111,21 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
     public MyFavorites load( int nKey, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1 , nKey );
+        daoUtil.setInt( 1, nKey );
         daoUtil.executeQuery( );
         MyFavorites myFavorites = null;
 
         if ( daoUtil.next( ) )
         {
-            myFavorites = new MyFavorites();
+            myFavorites = new MyFavorites( );
             int nIndex = 1;
-            
+
             myFavorites.setId( daoUtil.getInt( nIndex++ ) );
             myFavorites.setUrl( daoUtil.getString( nIndex++ ) );
             myFavorites.setIdIcon( daoUtil.getInt( nIndex++ ) );
             myFavorites.setLabel( daoUtil.getString( nIndex++ ) );
             myFavorites.setIdUser( daoUtil.getString( nIndex++ ) );
+            myFavorites.setOrder( daoUtil.getInt( nIndex++ ) );
         }
 
         daoUtil.free( );
@@ -132,7 +139,7 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
     public void delete( int nKey, Plugin plugin )
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1 , nKey );
+        daoUtil.setInt( 1, nKey );
         daoUtil.executeUpdate( );
         daoUtil.free( );
     }
@@ -145,14 +152,15 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
     {
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
         int nIndex = 1;
-        
-        daoUtil.setInt( nIndex++ , myFavorites.getId( ) );
-        daoUtil.setString( nIndex++ , myFavorites.getUrl( ) );
-        daoUtil.setInt( nIndex++ , myFavorites.getIdIcon( ) );
-        daoUtil.setString( nIndex++ , myFavorites.getLabel( ) );
-        daoUtil.setString(nIndex++ , myFavorites.getIdUser( ) );
 
-        daoUtil.setInt( nIndex , myFavorites.getId( ) );
+        daoUtil.setInt( nIndex++, myFavorites.getId( ) );
+        daoUtil.setString( nIndex++, myFavorites.getUrl( ) );
+        daoUtil.setInt( nIndex++, myFavorites.getIdIcon( ) );
+        daoUtil.setString( nIndex++, myFavorites.getLabel( ) );
+        daoUtil.setString( nIndex++, myFavorites.getIdUser( ) );
+        daoUtil.setInt( nIndex++, myFavorites.getOrder( ) );
+
+        daoUtil.setInt( nIndex, myFavorites.getId( ) );
 
         daoUtil.executeUpdate( );
         daoUtil.free( );
@@ -164,23 +172,23 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
     @Override
     public List<MyFavorites> selectMyFavoritesList( String idUser, Plugin plugin )
     {
-        List<MyFavorites> myFavoritesList = new ArrayList<MyFavorites>(  );
+        List<MyFavorites> myFavoritesList = new ArrayList<MyFavorites>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_USER, plugin );
-        daoUtil.setString( 1 , idUser );
-        
-        daoUtil.executeQuery(  );
+        daoUtil.setString( 1, idUser );
 
-        while ( daoUtil.next(  ) )
+        daoUtil.executeQuery( );
+
+        while ( daoUtil.next( ) )
         {
-            MyFavorites myFavorites = new MyFavorites(  );
+            MyFavorites myFavorites = new MyFavorites( );
             int nIndex = 1;
-            
+
             myFavorites.setId( daoUtil.getInt( nIndex++ ) );
             myFavorites.setUrl( daoUtil.getString( nIndex++ ) );
             myFavorites.setIdIcon( daoUtil.getInt( nIndex++ ) );
             myFavorites.setLabel( daoUtil.getString( nIndex++ ) );
             myFavorites.setIdUser( daoUtil.getString( nIndex++ ) );
-
+            myFavorites.setOrder( daoUtil.getInt( nIndex++ ) );
 
             myFavoritesList.add( myFavorites );
         }
@@ -188,28 +196,28 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
         daoUtil.free( );
         return myFavoritesList;
     }
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public List<MyFavorites> selectMyFavoritessList( Plugin plugin )
     {
-        List<MyFavorites> myFavoritesList = new ArrayList<MyFavorites>(  );
+        List<MyFavorites> myFavoritesList = new ArrayList<MyFavorites>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            MyFavorites myFavorites = new MyFavorites(  );
+            MyFavorites myFavorites = new MyFavorites( );
             int nIndex = 1;
-            
+
             myFavorites.setId( daoUtil.getInt( nIndex++ ) );
             myFavorites.setUrl( daoUtil.getString( nIndex++ ) );
             myFavorites.setIdIcon( daoUtil.getInt( nIndex++ ) );
             myFavorites.setLabel( daoUtil.getString( nIndex++ ) );
             myFavorites.setIdUser( daoUtil.getString( nIndex++ ) );
-
+            myFavorites.setOrder( daoUtil.getInt( nIndex++ ) );
 
             myFavoritesList.add( myFavorites );
         }
@@ -217,8 +225,7 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
         daoUtil.free( );
         return myFavoritesList;
     }
-    
-    
+
     /**
      * {@inheritDoc }
      */
@@ -227,9 +234,9 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
     {
         List<Integer> myFavoritesList = new ArrayList<Integer>( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
             myFavoritesList.add( daoUtil.getInt( 1 ) );
         }
@@ -237,23 +244,93 @@ public final class MyFavoritesDAO implements IMyFavoritesDAO
         daoUtil.free( );
         return myFavoritesList;
     }
-    
+
     /**
      * {@inheritDoc }
      */
     @Override
     public ReferenceList selectMyFavoritessReferenceList( Plugin plugin )
     {
-        ReferenceList myFavoritesList = new ReferenceList();
+        ReferenceList myFavoritesList = new ReferenceList( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+        daoUtil.executeQuery( );
 
-        while ( daoUtil.next(  ) )
+        while ( daoUtil.next( ) )
         {
-            myFavoritesList.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
+            myFavoritesList.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
         }
 
         daoUtil.free( );
         return myFavoritesList;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public List<Integer> selectMyFavoritesOrderList( String strIdUser, Plugin plugin )
+    {
+        List<Integer> myFavoritesOrderList = new ArrayList<Integer>( );
+
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ORDER_BY_USER, plugin );
+        daoUtil.setString( 1, strIdUser );
+        daoUtil.executeQuery( );
+
+        while ( daoUtil.next( ) )
+        {
+            myFavoritesOrderList.add( daoUtil.getInt( NumberUtils.INTEGER_ONE ) );
+        }
+        daoUtil.free( );
+
+        return myFavoritesOrderList;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public MyFavorites selectUserFavoriteByOrder( String strIdUser, int nOrder, Plugin plugin )
+    {
+        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ORDER, plugin );
+        daoUtil.setString( 1, strIdUser );
+        daoUtil.setInt( 2, nOrder );
+        daoUtil.executeQuery( );
+        MyFavorites myFavorites = null;
+
+        if ( daoUtil.next( ) )
+        {
+            myFavorites = new MyFavorites( );
+            int nIndex = 1;
+
+            myFavorites.setId( daoUtil.getInt( nIndex++ ) );
+            myFavorites.setUrl( daoUtil.getString( nIndex++ ) );
+            myFavorites.setIdIcon( daoUtil.getInt( nIndex++ ) );
+            myFavorites.setLabel( daoUtil.getString( nIndex++ ) );
+            myFavorites.setIdUser( daoUtil.getString( nIndex++ ) );
+            myFavorites.setOrder( daoUtil.getInt( nIndex++ ) );
+        }
+
+        daoUtil.free( );
+
+        return myFavorites;
+    }
+
+    /**
+     * {@inheritDoc }
+     */
+    @Override
+    public void updateFavoritesOrder( int nFavoritesId, int nOrder, Plugin plugin )
+    {
+        if ( nFavoritesId > 0 && nOrder > 0 )
+        {
+            DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_ORDER, plugin );
+            int nIndex = 1;
+
+            daoUtil.setInt( nIndex++, nOrder );
+            daoUtil.setInt( nIndex, nFavoritesId );
+
+            daoUtil.executeUpdate( );
+            daoUtil.free( );
+        }
     }
 }
