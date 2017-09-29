@@ -9,5 +9,7 @@
     <bean id="myportal-myfavorites.widgetHandlerMyFavorites" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesWidgetHandler" />
     
 	<bean id="myportal-myfavorites.myfavoritesservice" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService" />
+	<!-- REST -->
+	<bean id="myportal-myfavorites.myFavoritesRest" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.web.rs.MyFavoritesRest" />
 
 </beans>
