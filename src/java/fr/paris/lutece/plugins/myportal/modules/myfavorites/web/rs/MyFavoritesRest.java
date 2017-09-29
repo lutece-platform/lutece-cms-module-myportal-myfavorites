@@ -58,7 +58,7 @@ public class MyFavoritesRest
     // Path constants
     protected static final String PLUGIN_PATH = "myfavorites/";
     protected static final String FAVORITES_PATH = "favorites/";
-    
+
     // Format constants
     private static final String FORMAT_FAVORITES_STATUS_RESPONSE = "status";
     private static final String FORMAT_FAVORITES_RESPONSE_RESULT = "result";
@@ -68,19 +68,19 @@ public class MyFavoritesRest
     private static final String FORMAT_FAVORITES_LABEL = "label";
     private static final String FORMAT_FAVORITES_USER_ID = "strIdUser";
     private static final String FORMAT_FAVORITES_ORDER = "order";
-    
+
     // Status constants
     private static final String STATUS_OK = "OK";
     private static final String STATUS_KO = "KO";
-    
+
     // Parameters
     private static final String PARAMETER_ID_USER = "id_user";
-    
+
     /**
      * Return the list of all favorites of a user
      * 
-     * @param strIdUser 
-     *          the id of the user
+     * @param strIdUser
+     *            the id of the user
      * @return the list of all favorites of a user
      */
     @GET
@@ -89,7 +89,7 @@ public class MyFavoritesRest
     {
         String strStatus = STATUS_OK;
         String strFavoritesList = StringUtils.EMPTY;
-        
+
         try
         {
             List<MyFavorites> listUserFavorites = MyFavoritesHome.getMyFavoritessList( strIdUser );
@@ -98,33 +98,33 @@ public class MyFavoritesRest
                 strFavoritesList = formatMyFavoritesList( listUserFavorites );
             }
         }
-        catch ( Exception exception )
+        catch( Exception exception )
         {
             // We set the status at KO if an error occurred during the processing
             strStatus = STATUS_KO;
         }
-        
+
         // Format the response with the given status and the list of favorites
         String strResponse = formatResponse( strStatus, strFavoritesList );
-        
+
         return Response.ok( strResponse, MediaType.APPLICATION_JSON ).build( );
     }
-    
+
     /**
      * Return the Json response with the given status
      * 
      * @param strStatus
-     *          The status of the treatment "OK" by default "KO" if an error occurred during the processing
+     *            The status of the treatment "OK" by default "KO" if an error occurred during the processing
      * @param strResponse
-     *             The response to send
+     *            The response to send
      * @return the Json response with the given status
      */
     private String formatResponse( String strStatus, String strResponse )
-    {        
+    {
         JSONObject jsonResponse = new JSONObject( );
         jsonResponse.accumulate( FORMAT_FAVORITES_STATUS_RESPONSE, strStatus );
         jsonResponse.accumulate( FORMAT_FAVORITES_RESPONSE_RESULT, strResponse );
-        
+
         return jsonResponse.toString( );
     }
 
@@ -132,7 +132,7 @@ public class MyFavoritesRest
      * Return the Json of a list of MyFavorites object
      * 
      * @param listUserFavorites
-     *          the list of the favorites to format
+     *            the list of the favorites to format
      * @return the Json of a list of MyFavorites object
      */
     private String formatMyFavoritesList( List<MyFavorites> listUserFavorites )
@@ -156,9 +156,9 @@ public class MyFavoritesRest
      * Add the data from a MyFavorites object to a JsonObject
      * 
      * @param jsonMyFavorites
-     *      the Json to include the data
+     *            the Json to include the data
      * @param myFavorites
-     *      the MyFavorites to retrieve the data from
+     *            the MyFavorites to retrieve the data from
      */
     private void add( JSONObject jsonMyFavorites, MyFavorites myFavorites )
     {
