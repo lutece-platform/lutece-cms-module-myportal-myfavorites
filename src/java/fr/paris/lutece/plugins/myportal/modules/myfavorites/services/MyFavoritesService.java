@@ -54,7 +54,7 @@ public class MyFavoritesService
     /**
      * Name of the bean of the service
      */
-    public static final String BEAN_NAME = "myportal-myfavorites.myfavoritesservice";
+    public static final String BEAN_NAME = "myportal-myfavorites.myFavoritesService";
 
     /**
      * Return the list of all the order possible for the user for the creation of a new favorite

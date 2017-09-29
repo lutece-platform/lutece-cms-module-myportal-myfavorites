@@ -4,11 +4,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
 
+	<!-- DAO -->
     <bean id="myportal-myfavorites.myFavoritesDAO" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavoritesDAO" />
+    
 	<!-- Widget handler -->
     <bean id="myportal-myfavorites.widgetHandlerMyFavorites" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesWidgetHandler" />
     
-	<bean id="myportal-myfavorites.myfavoritesservice" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService" />
+    <!-- Service -->
+	<bean id="myportal-myfavorites.myFavoritesService" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService" />
+	
 	<!-- REST -->
 	<bean id="myportal-myfavorites.myFavoritesRest" class="fr.paris.lutece.plugins.myportal.modules.myfavorites.web.rs.MyFavoritesRest" />
 
