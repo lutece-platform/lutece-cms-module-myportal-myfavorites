@@ -23,19 +23,32 @@
 				<input type="hidden" name="myfavorites_url_return" value="${myfavorites_url_return}" />
 				<input type="hidden" name="myportal_url_return" value="${myportal_url_return}" />
 				
-				<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelLabel}' mandatory=true>
+				<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelLabel}' helpKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelLabel.help}' mandatory=true>
           			<@input type='text' id='label' name='label'  maxlength=50 value='${myfavorites.label}' tabIndex='0' />
 				</@formGroup>
 				
-				<@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelUrl}' mandatory=true>
+				<@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelUrl}' helpKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelUrl.help}' mandatory=true>
           			<@input type='text' id='url' name='url'  maxlength=255 value='${myfavorites.url}' tabIndex='1' />
 				</@formGroup>
 				
-				<@formGroup labelFor='id_icon' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelIdIcon}' mandatory=true>
-					<@radioIconList name="id_icon" default_value=myfavorites.idIcon icons=icons_list />
-				</@formGroup>
+				<div class="form-group">
+                	<label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label" for="id_icon" >
+                		#i18n{module.myportal.myfavorites.modify_myfavorites.labelIdIcon}
+                		<i class="fa fa-asterisk" aria-hidden="true"></i>
+                	</label>
+                	<div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
+                		<#if icons_list?has_content>
+                    		<@radioIconList name="id_icon" default_value=myfavorites.idIcon icons=icons_list />
+                    		<span class="help-block" id="id_icon_help">
+                    			#i18n{module.myportal.myfavorites.modify_myfavorites.labelIdIcon.help}
+                    		</span>
+                    	<#else>
+                    		<em>#i18n{module.myportal.myfavorites.modify_myfavorites.messageNoIcon}</em>
+                    	</#if>    
+            		</div>
+				</div>
 
-				<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelOrder}'>
+				<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelOrder}' helpKey='#i18n{module.myportal.myfavorites.modify_myfavorites.labelOrder.help}'>
 					<@comboWithParams name="order" items=favorites_order_list default_value='${myfavorites.order}' additionalParameters="class='form-control'" />
 				</@formGroup>
 				

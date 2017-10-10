@@ -53,13 +53,16 @@
                 	<div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
                 		<#if icons_list?has_content>
                     		<@radioIconList name="id_icon" default_value=(icons_list[0].id)!-1 icons=icons_list />
+                    		<span class="help-block" id="id_icon_help">
+                    			#i18n{module.myportal.myfavorites.create_myfavorites.labelIdIcon.help}
+                    		</span>
                     	<#else>
                     		<em>#i18n{module.myportal.myfavorites.create_myfavorites.messageNoIcon}</em>
                     	</#if>    
             		</div>
 				</div>
 				
-				<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder}'>
+				<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder.help}'>
 					<@comboWithParams name="order" items=favorites_order_list default_value="1" additionalParameters="class='form-control'" />
 				</@formGroup>
 				
