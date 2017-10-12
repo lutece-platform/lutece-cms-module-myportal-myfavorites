@@ -32,48 +32,49 @@
 			<fieldset>
 				<legend>#i18n{module.myportal.myfavorites.create_myfavorites.title}</legend>
 				<@messages errors=errors />
-				<input type="hidden" id="id" name="id"/>  
-				<input type="hidden" name="id_widget" value="${id_widget}" />
-				<input type="hidden" name="myfavorites_url_return" value="${myfavorites_url_return}" />
-				<input type="hidden" name="myportal_url_return" value="${myportal_url_return}" />
+				<#if user_connected>
+					<input type="hidden" id="id" name="id"/>  
+					<input type="hidden" name="id_widget" value="${id_widget}" />
+					<input type="hidden" name="myfavorites_url_return" value="${myfavorites_url_return}" />
+					<input type="hidden" name="myportal_url_return" value="${myportal_url_return}" />
 		
-          		<@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelUrl}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelUrl.help}' mandatory=true>
-					<@input type='text' id='url' name='url' value='${myfavorites.url!}'  maxlength=255 tabIndex='0' />
-	 			</@formGroup>
+          			<@formGroup labelFor='url' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelUrl}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelUrl.help}' mandatory=true>
+						<@input type='text' id='url' name='url' value='${myfavorites.url!}'  maxlength=255 tabIndex='0' />
+	 				</@formGroup>
  
-				<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelLabel}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelLabel.help}' mandatory=true>
-					<@input type='text' id='label' name='label' value='${myfavorites.label!}'  maxlength=50 tabIndex='2' />
-				</@formGroup>
+					<@formGroup labelFor='label' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelLabel}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelLabel.help}' mandatory=true>
+						<@input type='text' id='label' name='label' value='${myfavorites.label!}'  maxlength=50 tabIndex='2' />
+					</@formGroup>
 				
-				<div class="form-group">
-                	<label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label" for="id_icon" >
-                		#i18n{module.myportal.myfavorites.create_myfavorites.labelIdIcon}
-                		<i class="fa fa-asterisk" aria-hidden="true"></i>
-                	</label>
-                	<div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
-                		<#if icons_list?has_content>
-                    		<@radioIconList name="id_icon" default_value=(icons_list[0].id)!-1 icons=icons_list />
-                    		<span class="help-block" id="id_icon_help">
-                    			#i18n{module.myportal.myfavorites.create_myfavorites.labelIdIcon.help}
-                    		</span>
-                    	<#else>
-                    		<em>#i18n{module.myportal.myfavorites.create_myfavorites.messageNoIcon}</em>
-                    	</#if>    
-            		</div>
-				</div>
+					<div class="form-group">
+                		<label class="col-xs-12 col-sm-3 col-md-3 col-lg-3 control-label" for="id_icon" >
+                			#i18n{module.myportal.myfavorites.create_myfavorites.labelIdIcon}
+                			<i class="fa fa-asterisk" aria-hidden="true"></i>
+                		</label>
+                		<div class="col-xs-12 col-sm-9 col-md-6 col-lg-6">
+                			<#if icons_list?has_content>
+                    			<@radioIconList name="id_icon" default_value=(icons_list[0].id)!-1 icons=icons_list />
+                    			<span class="help-block" id="id_icon_help">
+                    				#i18n{module.myportal.myfavorites.create_myfavorites.labelIdIcon.help}
+                    			</span>
+                    		<#else>
+                    			<em>#i18n{module.myportal.myfavorites.create_myfavorites.messageNoIcon}</em>
+                    		</#if>    
+            			</div>
+					</div>
 				
-				<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder.help}'>
-					<@comboWithParams name="order" items=favorites_order_list default_value="1" additionalParameters="class='form-control'" />
-				</@formGroup>
+					<@formGroup labelFor='order' labelKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder}' helpKey='#i18n{module.myportal.myfavorites.create_myfavorites.labelOrder.help}'>
+						<@comboWithParams name="order" items=favorites_order_list default_value="1" additionalParameters="class='form-control'" />
+					</@formGroup>
 				
-				<@formGroup>
-					<@button name='action_createMyFavorites' type='submit' tabIndex='3' title='#i18n{portal.util.labelCreate}' buttonIcon='plus' />
-					<button class="btn btn-sm btn-default btn-flat" name="back" type="submit" title="#i18n{portal.util.labelCancel}" formnovalidate>
-						<i class="fa fa-close" aria-hidden="true"></i>
-						#i18n{portal.util.labelCancel}
-					</button>
-				</@formGroup>
-				
+					<@formGroup>
+						<@button name='action_createMyFavorites' type='submit' tabIndex='3' title='#i18n{portal.util.labelCreate}' buttonIcon='plus' />
+						<button class="btn btn-sm btn-default btn-flat" name="back" type="submit" title="#i18n{portal.util.labelCancel}" formnovalidate>
+							<i class="fa fa-close" aria-hidden="true"></i>
+							#i18n{portal.util.labelCancel}
+						</button>
+					</@formGroup>
+				</#if>
 			</fieldset>
 		</@tform>
 	</@columns>

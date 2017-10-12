@@ -45,6 +45,7 @@ import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavorites
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavoritesHome;
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService;
 import fr.paris.lutece.plugins.myportal.service.IconService;
+import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.SiteMessage;
 import fr.paris.lutece.portal.service.message.SiteMessageException;
 import fr.paris.lutece.portal.service.message.SiteMessageService;
@@ -96,6 +97,7 @@ public class MyFavoritesXPage extends MVCApplication
     private static final String MARK_ID_WIDGET = "id_widget";
     private static final String MARK_ICONS_LIST = "icons_list";
     private static final String MARK_FAVORITES_ORDER_LIST = "favorites_order_list";
+    private static final String MARK_USER_CONNECTED = "user_connected";
 
     // Message
     private static final String MESSAGE_CONFIRM_REMOVE_MYFAVORITES = "module.myportal.myfavorites.message.confirmRemoveMyFavorites";
@@ -115,6 +117,9 @@ public class MyFavoritesXPage extends MVCApplication
     private static final String INFO_MYFAVORITES_CREATED = "module.myportal.myfavorites.info.myfavorites.created";
     private static final String INFO_MYFAVORITES_UPDATED = "module.myportal.myfavorites.info.myfavorites.updated";
     private static final String INFO_MYFAVORITES_REMOVED = "module.myportal.myfavorites.info.myfavorites.removed";
+    
+    // Errors
+    private static final String ERROR_USER_NOT_CONNECTED = "module.myportal.myfavorites.error.user.notConnected";
 
     // Session variable to store working values
     private MyFavorites _myfavorites;
@@ -136,15 +141,27 @@ public class MyFavoritesXPage extends MVCApplication
      * @param request
      *            The Http request
      * @return the html code of the myfavorites form
+     * @throws SiteMessageException 
      * @throws UserNotSignedException
      */
     @View( VIEW_CREATE_MYFAVORITES )
-    public XPage getCreateMyFavorites( HttpServletRequest request ) throws UserNotSignedException
+    public XPage getCreateMyFavorites( HttpServletRequest request ) throws SiteMessageException
     {
-        LuteceUser user = getUser( request );
-        _myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites( );
-
         Map<String, Object> model = getModel( );
+        
+        LuteceUser user = null;
+        try
+        {
+            user = getUser( request );
+            model.put( MARK_USER_CONNECTED, Boolean.TRUE );
+        }
+        catch ( UserNotSignedException exception )
+        {
+            addError( I18nService.getLocalizedString( ERROR_USER_NOT_CONNECTED, request.getLocale( ) ) );
+            model.put( MARK_USER_CONNECTED, Boolean.FALSE );
+        }
+            
+        _myfavorites = ( _myfavorites != null ) ? _myfavorites : new MyFavorites( );
 
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         String strMyPortalMyFavoritesUrlReturn = request.getParameter( MARK_MYFAVORITES_URL_RETURN );
@@ -173,6 +190,7 @@ public class MyFavoritesXPage extends MVCApplication
         }
 
         model.put( MARK_MYFAVORITES, _myfavorites );
+        fillCommons( model );
 
         return getXPage( TEMPLATE_CREATE_MYFAVORITES, request.getLocale( ), model );
     }
