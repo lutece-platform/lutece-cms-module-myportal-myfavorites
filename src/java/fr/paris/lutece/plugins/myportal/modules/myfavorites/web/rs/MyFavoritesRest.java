@@ -35,9 +35,11 @@ package fr.paris.lutece.plugins.myportal.modules.myfavorites.web.rs;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -46,6 +48,8 @@ import org.apache.commons.lang.StringUtils;
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavorites;
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavoritesHome;
 import fr.paris.lutece.plugins.rest.service.RestConstants;
+import fr.paris.lutece.portal.service.security.LuteceUser;
+import fr.paris.lutece.portal.service.security.SecurityService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -73,34 +77,38 @@ public class MyFavoritesRest
     private static final String STATUS_OK = "OK";
     private static final String STATUS_KO = "KO";
 
-    // Parameters
-    private static final String PARAMETER_ID_USER = "id_user";
-
     /**
      * Return the list of all favorites of a user
      * 
-     * @param strIdUser
-     *            the id of the user
+     * @param request httpServletRequest
      * @return the list of all favorites of a user
      */
     @GET
-    @Path( "{" + PARAMETER_ID_USER + "}" )
-    public Response getUserListFavorites( @PathParam( PARAMETER_ID_USER ) String strIdUser )
+    public Response getUserListFavorites(  @Context HttpServletRequest request )
     {
         String strStatus = STATUS_OK;
+        
         String strFavoritesList = StringUtils.EMPTY;
-
-        try
-        {
-            List<MyFavorites> listUserFavorites = MyFavoritesHome.getMyFavoritessList( strIdUser );
-            if ( listUserFavorites != null && !listUserFavorites.isEmpty( ) )
+        
+        LuteceUser user = SecurityService.getInstance().getRegisteredUser(request);
+        //the user must be authenticated
+        if( user != null ){
+            try
             {
-                strFavoritesList = formatMyFavoritesList( listUserFavorites );
+                List<MyFavorites> listUserFavorites = MyFavoritesHome.getMyFavoritessList( user.getName( ) );
+                if ( listUserFavorites != null && !listUserFavorites.isEmpty( ) )
+                {
+                    strFavoritesList = formatMyFavoritesList( listUserFavorites );
+                }
+            }
+            catch( Exception exception )
+            {
+                // We set the status at KO if an error occurred during the processing
+                strStatus = STATUS_KO;
             }
         }
-        catch( Exception exception )
-        {
-            // We set the status at KO if an error occurred during the processing
+        else
+        { 
             strStatus = STATUS_KO;
         }
 
