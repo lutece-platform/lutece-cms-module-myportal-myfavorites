@@ -56,12 +56,15 @@ import net.sf.json.JSONObject;
 /**
  * REST service for MyFavorites resource
  */
-@Path( RestConstants.BASE_PATH + MyFavoritesRest.PLUGIN_PATH + MyFavoritesRest.FAVORITES_PATH )
+@Path( RestConstants.BASE_PATH + MyFavoritesRest.PLUGIN_PATH)
 public class MyFavoritesRest
 {
     // Path constants
+    protected static final String USER_GUID = "user_guid";
     protected static final String PLUGIN_PATH = "myfavorites/";
-    protected static final String FAVORITES_PATH = "favorites/";
+    protected static final String PATH_FAVORITES= "public/favorites/";
+    protected static final String PATH_FAVORITES_BY_USERGUID = "private/favorites/{" + MyFavoritesRest.USER_GUID+ "}";
+    
 
     // Format constants
     private static final String FORMAT_FAVORITES_STATUS_RESPONSE = "status";
@@ -84,6 +87,7 @@ public class MyFavoritesRest
      * @return the list of all favorites of a user
      */
     @GET
+    @Path( MyFavoritesRest.PATH_FAVORITES )
     public Response getUserListFavorites(  @Context HttpServletRequest request )
     {
         String strStatus = STATUS_OK;
@@ -117,6 +121,50 @@ public class MyFavoritesRest
 
         return Response.ok( strResponse, MediaType.APPLICATION_JSON ).build( );
     }
+    
+    /**
+     * Return the list of all favorites of a user by guid
+     * the rest module is protected by signed request filter
+     * @param request httpServletRequest
+     * @return the list of all favorites of a user
+     */
+    @Path( MyFavoritesRest.PATH_FAVORITES_BY_USERGUID )
+    @GET
+    public Response getUserListFavoritesByGuid(  @Context HttpServletRequest request,@PathParam( MyFavoritesRest.USER_GUID )
+    String strGuid )
+    {
+        String strStatus = STATUS_OK;
+        
+        String strFavoritesList = StringUtils.EMPTY;
+        
+ 
+        //the user must be authenticated
+        if( !StringUtils.isEmpty(strGuid)){
+            try
+            {
+                List<MyFavorites> listUserFavorites = MyFavoritesHome.getMyFavoritessList( strGuid );
+                if ( listUserFavorites != null && !listUserFavorites.isEmpty( ) )
+                {
+                    strFavoritesList = formatMyFavoritesList( listUserFavorites );
+                }
+            }
+            catch( Exception exception )
+            {
+                // We set the status at KO if an error occurred during the processing
+                strStatus = STATUS_KO;
+            }
+        }
+        else
+        { 
+            strStatus = STATUS_KO;
+        }
+
+        // Format the response with the given status and the list of favorites
+        String strResponse = formatResponse( strStatus, strFavoritesList );
+
+        return Response.ok( strResponse, MediaType.APPLICATION_JSON ).build( );
+    }
+
 
     /**
      * Return the Json response with the given status
