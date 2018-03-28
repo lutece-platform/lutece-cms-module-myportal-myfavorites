@@ -56,15 +56,14 @@ import net.sf.json.JSONObject;
 /**
  * REST service for MyFavorites resource
  */
-@Path( RestConstants.BASE_PATH + MyFavoritesRest.PLUGIN_PATH)
+@Path( RestConstants.BASE_PATH + MyFavoritesRest.PLUGIN_PATH )
 public class MyFavoritesRest
 {
     // Path constants
     protected static final String USER_GUID = "user_guid";
     protected static final String PLUGIN_PATH = "myfavorites/";
-    protected static final String PATH_FAVORITES= "public/favorites/";
-    protected static final String PATH_FAVORITES_BY_USERGUID = "private/favorites/{" + MyFavoritesRest.USER_GUID+ "}";
-    
+    protected static final String PATH_FAVORITES = "public/favorites/";
+    protected static final String PATH_FAVORITES_BY_USERGUID = "private/favorites/{" + MyFavoritesRest.USER_GUID + "}";
 
     // Format constants
     private static final String FORMAT_FAVORITES_STATUS_RESPONSE = "status";
@@ -83,20 +82,22 @@ public class MyFavoritesRest
     /**
      * Return the list of all favorites of a user
      * 
-     * @param request httpServletRequest
+     * @param request
+     *            httpServletRequest
      * @return the list of all favorites of a user
      */
     @GET
     @Path( MyFavoritesRest.PATH_FAVORITES )
-    public Response getUserListFavorites(  @Context HttpServletRequest request )
+    public Response getUserListFavorites( @Context HttpServletRequest request )
     {
         String strStatus = STATUS_OK;
-        
+
         String strFavoritesList = StringUtils.EMPTY;
-        
-        LuteceUser user = SecurityService.getInstance().getRegisteredUser(request);
-        //the user must be authenticated
-        if( user != null ){
+
+        LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
+        // the user must be authenticated
+        if ( user != null )
+        {
             try
             {
                 List<MyFavorites> listUserFavorites = MyFavoritesHome.getMyFavoritessList( user.getName( ) );
@@ -112,7 +113,7 @@ public class MyFavoritesRest
             }
         }
         else
-        { 
+        {
             strStatus = STATUS_KO;
         }
 
@@ -121,25 +122,25 @@ public class MyFavoritesRest
 
         return Response.ok( strResponse, MediaType.APPLICATION_JSON ).build( );
     }
-    
+
     /**
-     * Return the list of all favorites of a user by guid
-     * the rest module is protected by signed request filter
-     * @param request httpServletRequest
+     * Return the list of all favorites of a user by guid the rest module is protected by signed request filter
+     * 
+     * @param request
+     *            httpServletRequest
      * @return the list of all favorites of a user
      */
     @Path( MyFavoritesRest.PATH_FAVORITES_BY_USERGUID )
     @GET
-    public Response getUserListFavoritesByGuid(  @Context HttpServletRequest request,@PathParam( MyFavoritesRest.USER_GUID )
-    String strGuid )
+    public Response getUserListFavoritesByGuid( @Context HttpServletRequest request, @PathParam( MyFavoritesRest.USER_GUID ) String strGuid )
     {
         String strStatus = STATUS_OK;
-        
+
         String strFavoritesList = StringUtils.EMPTY;
-        
- 
-        //the user must be authenticated
-        if( !StringUtils.isEmpty(strGuid)){
+
+        // the user must be authenticated
+        if ( !StringUtils.isEmpty( strGuid ) )
+        {
             try
             {
                 List<MyFavorites> listUserFavorites = MyFavoritesHome.getMyFavoritessList( strGuid );
@@ -155,7 +156,7 @@ public class MyFavoritesRest
             }
         }
         else
-        { 
+        {
             strStatus = STATUS_KO;
         }
 
@@ -164,7 +165,6 @@ public class MyFavoritesRest
 
         return Response.ok( strResponse, MediaType.APPLICATION_JSON ).build( );
     }
-
 
     /**
      * Return the Json response with the given status

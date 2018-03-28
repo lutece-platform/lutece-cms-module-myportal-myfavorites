@@ -45,7 +45,6 @@ import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavorites
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.business.MyFavoritesHome;
 import fr.paris.lutece.plugins.myportal.modules.myfavorites.services.MyFavoritesService;
 import fr.paris.lutece.plugins.myportal.service.IconService;
-import fr.paris.lutece.plugins.myportal.service.MyPortalPlugin;
 import fr.paris.lutece.plugins.myportal.service.WidgetContentService;
 import fr.paris.lutece.portal.service.i18n.I18nService;
 import fr.paris.lutece.portal.service.message.SiteMessage;
@@ -127,7 +126,7 @@ public class MyFavoritesXPage extends MVCApplication
     private MyFavorites _myfavorites;
     private final MyFavoritesService _myFavoritesService = SpringContextService.getBean( MyFavoritesService.BEAN_NAME );
     private final WidgetContentService _widgetContentService = SpringContextService.getBean( WidgetContentService.BEAN_NAME );
-    
+
     @View( value = VIEW_MANAGE_MYFAVORITESS, defaultView = true )
     public XPage getManageMyFavoritess( HttpServletRequest request )
     {
@@ -233,8 +232,8 @@ public class MyFavoritesXPage extends MVCApplication
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         if ( StringUtils.isNotBlank( strIdWidget ) && StringUtils.isNumeric( strIdWidget ) )
         {
-        	int nIdWidget = Integer.parseInt( strIdWidget );
-        	_widgetContentService.removeCache(nIdWidget, user);
+            int nIdWidget = Integer.parseInt( strIdWidget );
+            _widgetContentService.removeCache( nIdWidget, user );
             String strUserName = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
             _myFavoritesService.manageMyFavoritesCreation( strUserName, _myfavorites );
             addInfo( INFO_MYFAVORITES_CREATED, getLocale( request ) );
@@ -288,8 +287,8 @@ public class MyFavoritesXPage extends MVCApplication
 
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         int nIdWidget = Integer.parseInt( strIdWidget );
-        _widgetContentService.removeCache(nIdWidget, user);
-        
+        _widgetContentService.removeCache( nIdWidget, user );
+
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_MYFAVORITES ) );
         String strIdUser = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
         _myFavoritesService.manageMyFavoritesRemoving( nId, strIdUser );
@@ -394,7 +393,7 @@ public class MyFavoritesXPage extends MVCApplication
 
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         int nIdWidget = Integer.parseInt( strIdWidget );
-        _widgetContentService.removeCache(nIdWidget, user);
+        _widgetContentService.removeCache( nIdWidget, user );
         String strIdUser = ( user != null ) ? user.getName( ) : StringUtils.EMPTY;
         _myFavoritesService.manageModifyMyFavorites( _myfavorites, strIdUser, nOrderOrigin );
         addInfo( INFO_MYFAVORITES_UPDATED, getLocale( request ) );
