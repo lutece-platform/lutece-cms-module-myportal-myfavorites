@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
         <artifactId>module-myportal-myfavorites</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     	<name>Lutece myportal myfavorites module</name>
     <repositories>
         <repository>
@@ -45,11 +45,12 @@
     <properties>
         <componentName>myportal-myfavorites</componentName>
         <jiraProjectName>MMFAVORITE</jiraProjectName>
-        <jiraComponentId></jiraComponentId>
+        <jiraComponentId />
     </properties>
     <scm>
 			<connection>scm:git:https://github.com/lutece-platform/lutece-cms-module-myportal-myfavorites.git</connection>
 			<developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-module-myportal-myfavorites.git</developerConnection>
 		<url>https://github.com/lutece-platform/lutece-cms-module-myportal-myfavorites.git</url>
+    <tag>module-myportal-myfavorites-1.0.0</tag>
   </scm>
 </project>
