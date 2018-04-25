@@ -47,4 +47,9 @@
         <jiraProjectName>MMFAVORITE</jiraProjectName>
         <jiraComponentId></jiraComponentId>
     </properties>
+    <scm>
+			<connection>scm:git:https://github.com/lutece-platform/lutece-cms-module-myportal-myfavorites.git</connection>
+			<developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-module-myportal-myfavorites.git</developerConnection>
+		<url>https://github.com/lutece-platform/lutece-cms-module-myportal-myfavorites.git</url>
+  </scm>
 </project>
