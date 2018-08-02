@@ -55,6 +55,8 @@ import fr.paris.lutece.portal.service.security.LuteceUser;
 import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
+import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
 import fr.paris.lutece.portal.util.mvc.xpage.MVCApplication;
@@ -63,6 +65,7 @@ import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.url.UrlItem;
+import java.net.MalformedURLException;
 
 /**
  * This class provides the user interface to manage MyFavorites xpages ( manage, create, modify, remove )
@@ -209,8 +212,16 @@ public class MyFavoritesXPage extends MVCApplication
     @Action( ACTION_CREATE_MYFAVORITES )
     public String doCreateMyFavorites( HttpServletRequest request ) throws SiteMessageException, UserNotSignedException
     {
-        // Manage the case where the user cancel his action
         String strUrlReturn = request.getParameter( PARAMETER_FAVORITES_URL_RETURN );
+
+	// Open redirect control (set baseUrl in lutece properties in case of ReverseProxy)
+        if ( !StringUtils.isBlank(strUrlReturn) && !strUrlReturn.startsWith( AppPathService.getBaseUrl( request ) ) )
+        {
+		AppLogService.error( "WARNING : Incorrect base URL", new MalformedURLException() );
+                strUrlReturn = AppPathService.getBaseUrl( request );
+	}
+
+        // Manage the case where the user cancel his action
         if ( request.getParameter( PARAMETER_BACK ) != null && StringUtils.isNotEmpty( strUrlReturn ) )
         {
             return strUrlReturn;
@@ -285,6 +296,13 @@ public class MyFavoritesXPage extends MVCApplication
         LuteceUser user = getUser( request );
         String strUrlReturn = request.getParameter( PARAMETER_FAVORITES_URL_RETURN );
 
+        // Open redirect control (set baseUrl in lutece properties in case of ReverseProxy)
+        if (  !StringUtils.isBlank(strUrlReturn) && !strUrlReturn.startsWith( AppPathService.getBaseUrl( request ) ) )
+        {
+		AppLogService.error( "WARNING : Incorrect base URL", new MalformedURLException() );
+                strUrlReturn = AppPathService.getBaseUrl( request );
+	}
+
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         int nIdWidget = Integer.parseInt( strIdWidget );
         _widgetContentService.removeCache( nIdWidget, user );
@@ -323,6 +341,18 @@ public class MyFavoritesXPage extends MVCApplication
         String strIdWidget = request.getParameter( PARAMETER_ID_WIDGET );
         String strMyPortalMyFavoritesUrlReturn = request.getParameter( MARK_MYFAVORITES_URL_RETURN );
         String strMyPortalUrlReturn = request.getParameter( PARAMETER_MYPORTAL_URL_RETURN );
+
+        // Open redirect control (set baseUrl in lutece properties in case of ReverseProxy)
+        if (  !StringUtils.isBlank(strMyPortalMyFavoritesUrlReturn) && !strMyPortalMyFavoritesUrlReturn.startsWith( AppPathService.getBaseUrl( request ) ) )
+        {
+		AppLogService.error( "WARNING : Incorrect base URL", new MalformedURLException() );
+                strMyPortalMyFavoritesUrlReturn = AppPathService.getBaseUrl( request );
+	}
+        if (  !StringUtils.isBlank(strMyPortalUrlReturn) && !strMyPortalUrlReturn.startsWith( AppPathService.getBaseUrl( request ) ) )
+        {
+		AppLogService.error( "WARNING : Incorrect base URL", new MalformedURLException() );
+                strMyPortalUrlReturn = AppPathService.getBaseUrl( request );
+	}
 
         if ( StringUtils.isBlank( strMyPortalMyFavoritesUrlReturn ) )
         {
@@ -367,6 +397,12 @@ public class MyFavoritesXPage extends MVCApplication
         String strUrlReturn = request.getParameter( PARAMETER_FAVORITES_URL_RETURN );
         if ( request.getParameter( PARAMETER_BACK ) != null && StringUtils.isNotEmpty( strUrlReturn ) )
         {
+            // Open redirect control (set baseUrl in lutece properties in case of ReverseProxy)
+            if ( !StringUtils.isBlank(strUrlReturn) && !strUrlReturn.startsWith( AppPathService.getBaseUrl( request ) ) )
+            {
+                    AppLogService.error( "WARNING : Incorrect base URL", new MalformedURLException() );
+                    strUrlReturn = AppPathService.getBaseUrl( request );
+            }
             return strUrlReturn;
         }
 
